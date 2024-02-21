@@ -14,16 +14,18 @@ import statistics
 from typing import Any, Dict, List
 from Bio import Entrez
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
-import re#Mr.Mao
+
+
 def create_file(store_path):
     if os.path.exists(store_path):
         print("path exists")
-        #shutil.rmtree(store_path)
-        #os.makedirs(store_path)
-    else:      
+        # shutil.rmtree(store_path)
+        # os.makedirs(store_path)
+    else:
         os.makedirs(store_path)
-        print(store_path) 
-        
+        print(store_path)
+
+
 def pickle_write(path: str, pickled_object: Any) -> None:
     """Writes the given object as pickled file with the given path
 
@@ -32,10 +34,11 @@ def pickle_write(path: str, pickled_object: Any) -> None:
     * path: str ~ The path of the pickled file that shall be created
     * pickled_object: Any ~ The object which shall be saved in the pickle file
     """
-    pickle_file = open(path, 'wb')
+    pickle_file = open(path, "wb")
     pickle.dump(pickled_object, pickle_file)
     pickle_file.close()
-    
+
+
 def pickle_load(path: str) -> Any:
     """Returns the value of the given pickle file.
 
@@ -43,10 +46,11 @@ def pickle_load(path: str) -> Any:
     ----------
     * path: str ~ The path to the pickle file.
     """
-    pickle_file = open(path, 'rb')
+    pickle_file = open(path, "rb")
     pickled_object = pickle.load(pickle_file)
     pickle_file.close()
-    return pickled_object    
+    return pickled_object
+
 
 def json_write(path: str, dictionary: Dict[Any, Any]) -> None:
     """Writes a JSON file at the given path with the given dictionary as content.
@@ -61,7 +65,10 @@ def json_write(path: str, dictionary: Dict[Any, Any]) -> None:
     with open(path, "w", encoding="utf-8") as f:
         f.write(json_output)
 
-def parse_bigg_metabolites_file(bigg_metabolites_file_path: str, json_output_folder: str) -> None:
+
+def parse_bigg_metabolites_file(
+    bigg_metabolites_file_path: str, json_output_folder: str
+) -> None:
     """Parses a BIGG metabolites text file and returns a dictionary for this file.
 
     As of 29/04/2019, a BIGG metabolites list of all BIGG-included metabolites
@@ -114,8 +121,8 @@ def parse_bigg_metabolites_file(bigg_metabolites_file_path: str, json_output_fol
         bigg_id_name_mapping[bigg_id] = bigg_id
 
     # Write the JSON in the given folder :D
-    json_write(json_output_folder+"bigg_id_name_mapping.json",
-               bigg_id_name_mapping)
+    json_write(json_output_folder + "bigg_id_name_mapping.json", bigg_id_name_mapping)
+
 
 def json_load(path: str) -> Dict[Any, Any]:
     """Loads the given JSON file and returns it as dictionary.
@@ -128,8 +135,10 @@ def json_load(path: str) -> Dict[Any, Any]:
         dictionary = json.load(f)
     return dictionary
 
-def parse_brenda_textfile(brenda_textfile_path: str, bigg_metabolites_json_folder: str,
-                          json_output_path: str) -> None:
+
+def parse_brenda_textfile(
+    brenda_textfile_path: str, bigg_metabolites_json_folder: str, json_output_path: str
+) -> None:
     """Goes through a BRENDA database textfile and converts it into a machine-readable JSON.
 
     The JSON includes kcats for found organisms and substrates.
@@ -176,12 +185,12 @@ def parse_brenda_textfile(brenda_textfile_path: str, bigg_metabolites_json_folde
     'REST' stands for a substrate without found BIGG ID.
     """
     # Standardize output folder
-    bigg_metabolites_json_folder = standardize_folder(
-        bigg_metabolites_json_folder)
+    bigg_metabolites_json_folder = standardize_folder(bigg_metabolites_json_folder)
 
     # Load BIGG ID <-> metabolite name mapping :D
     bigg_id_name_mapping: Dict[str, str] = json_load(
-        bigg_metabolites_json_folder+"bigg_id_name_mapping.json")
+        bigg_metabolites_json_folder + "bigg_id_name_mapping.json"
+    )
 
     # Load BRENDA textfile as list of strings without newlines :D
     with open(brenda_textfile_path, "r", encoding="utf-8") as f:
@@ -218,7 +227,7 @@ def parse_brenda_textfile(brenda_textfile_path: str, bigg_metabolites_json_folde
             in_turnover_numbers = True
             i += 1
             line = lines[i]
-            
+
         if in_organism_reference:
             if line.startswith("PR"):
                 organism_lines.append("")
@@ -232,11 +241,11 @@ def parse_brenda_textfile(brenda_textfile_path: str, bigg_metabolites_json_folde
             if len(kcat_lines[-1]) > 0:
                 kcat_lines[-1] += " "
             kcat_lines[-1] += line
-            
+
         if len(line) == 0:
             in_turnover_numbers = False
             in_organism_reference = False
-            
+
         i += 1
 
     # Create the BRENDA database dictionary using the collected kcat and organism lines
@@ -248,35 +257,44 @@ def parse_brenda_textfile(brenda_textfile_path: str, bigg_metabolites_json_folde
             actual_ec_number = ec_number.split(" (transferred")[0]
             try:
                 brenda_kcat_database[actual_ec_number] = {}
-                brenda_kcat_database[actual_ec_number]["TRANSFER"] = \
-                    ec_number.lower().replace("  ", " ").split(
-                        "(transferred to ec")[1].replace(")", "").lstrip()
+                brenda_kcat_database[actual_ec_number]["TRANSFER"] = (
+                    ec_number.lower()
+                    .replace("  ", " ")
+                    .split("(transferred to ec")[1]
+                    .replace(")", "")
+                    .lstrip()
+                )
             except Exception:
                 # Some transfers go to general subgroups instead of single EC numbers so that
                 # no kcat database can be built from it D:
-                print("WARNING: BRENDA text file line " + ec_number + " is not interpretable!")
+                print(
+                    "WARNING: BRENDA text file line "
+                    + ec_number
+                    + " is not interpretable!"
+                )
             continue
 
         brenda_kcat_database[ec_number] = {}
-        
+
         reference_number_organism_mapping = {}
         organism_lines = ec_number_organsism_lines_mapping[ec_number]
         for organism_line in organism_lines:
             reference_number = organism_line.split("#")[1]
             organism_line_split_first_part = organism_line.split("# ")[1]
             organism_line_split = organism_line_split_first_part.split(" ")
-            organism_line_split = [
-                x for x in organism_line_split if len(x) > 0]
+            organism_line_split = [x for x in organism_line_split if len(x) > 0]
 
             end = 1
             for part in organism_line_split:
                 # Some organism names contain their SwissProt or UniProt ID,
                 # since we don't nned them they are excluded
-                if ("swissprot" in part.lower()) or \
-                    (part.lower() == "and") or \
-                    ("uniprot" in part.lower()) or \
-                    ("genbank" in part.lower()) or \
-                        ("trembl" in part.lower()):
+                if (
+                    ("swissprot" in part.lower())
+                    or (part.lower() == "and")
+                    or ("uniprot" in part.lower())
+                    or ("genbank" in part.lower())
+                    or ("trembl" in part.lower())
+                ):
                     end -= 2
                     break
 
@@ -297,8 +315,7 @@ def parse_brenda_textfile(brenda_textfile_path: str, bigg_metabolites_json_folde
                 continue
             reference_number = kcat_line.split("#")[1].split(",")[0]
             organism = reference_number_organism_mapping[reference_number]
-            kcat_str = "".join(kcat_line.split("#")[2]).split("{")[
-                0].lstrip().rstrip()
+            kcat_str = "".join(kcat_line.split("#")[2]).split("{")[0].lstrip().rstrip()
             kcat = max([float(x) for x in kcat_str.split("-") if len(x) > 0])
             substrate = "".join(kcat_line.split("{")[1]).split("}")[0]
 
@@ -313,11 +330,14 @@ def parse_brenda_textfile(brenda_textfile_path: str, bigg_metabolites_json_folde
             if organism not in brenda_kcat_database[ec_number][substrate].keys():
                 brenda_kcat_database[ec_number][substrate][organism] = []
             brenda_kcat_database[ec_number][substrate][organism].append(kcat)
-        
+
     # Write final BRENDA kcat database :D
     json_write(json_output_path, brenda_kcat_database)
-    
-def is_fitting_ec_numbers(ec_number_one: str, ec_number_two: str, wildcard_level: int) -> bool:
+
+
+def is_fitting_ec_numbers(
+    ec_number_one: str, ec_number_two: str, wildcard_level: int
+) -> bool:
     """Check whether the EC numbers are the same under the used wildcard level.
 
     Arguments
@@ -337,8 +357,11 @@ def is_fitting_ec_numbers(ec_number_one: str, ec_number_two: str, wildcard_level
         return True
     else:
         return False
-    
-def _get_transfer_ec_number_entry(ec_number_entry_key: str, brenda_kcat_database_original: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
+
+
+def _get_transfer_ec_number_entry(
+    ec_number_entry_key: str, brenda_kcat_database_original: Dict[str, Dict[str, Any]]
+) -> Dict[str, Any]:
     """Returns the new EC number to which the given EC number was transferred.
 
     This is indicated in the given dictionary by the 'TRANSFER' key.
@@ -370,7 +393,10 @@ def _get_transfer_ec_number_entry(ec_number_entry_key: str, brenda_kcat_database
 
     return copy.deepcopy(ec_number_entry)
 
-def parse_brenda_json_for_model(sbml_path: str, brenda_json_path: str, output_json_path: str) -> None:
+
+def parse_brenda_json_for_model(
+    sbml_path: str, brenda_json_path: str, output_json_path: str
+) -> None:
     """Reads out a BRENDA JSON file created with parse_brenda_textfile and creates a model-specific JSON.
 
     Arguments
@@ -407,7 +433,7 @@ def parse_brenda_json_for_model(sbml_path: str, brenda_json_path: str, output_js
             continue
 
         ec_numbers_of_reaction = reaction.annotation["ec-code"]
-        if type(ec_numbers_of_reaction) is str:
+        if isinstance(ec_numbers_of_reaction, str):
             ec_numbers_of_reaction = [ec_numbers_of_reaction]
         ec_numbers_of_model += ec_numbers_of_reaction
     ec_numbers_of_model = list(set(ec_numbers_of_model))
@@ -419,7 +445,8 @@ def parse_brenda_json_for_model(sbml_path: str, brenda_json_path: str, output_js
         entry_error = False
         if ec_number in brenda_kcat_database_original.keys():
             ec_number_entry = _get_transfer_ec_number_entry(
-                ec_number, brenda_kcat_database_original)
+                ec_number, brenda_kcat_database_original
+            )
             if "ERROR" in ec_number_entry.keys():
                 entry_error = True
             else:
@@ -430,12 +457,14 @@ def parse_brenda_json_for_model(sbml_path: str, brenda_json_path: str, output_js
             eligible_ec_number_entries: List[Dict[str, Any]] = []
             for wildcard_level in range(1, 5):
                 for database_ec_number in list(brenda_kcat_database_original.keys()):
-                    if is_fitting_ec_numbers(ec_number, database_ec_number, wildcard_level):
+                    if is_fitting_ec_numbers(
+                        ec_number, database_ec_number, wildcard_level
+                    ):
                         database_ec_number_entry = _get_transfer_ec_number_entry(
-                            database_ec_number, brenda_kcat_database_original)
+                            database_ec_number, brenda_kcat_database_original
+                        )
                         if "ERROR" not in database_ec_number_entry.keys():
-                            eligible_ec_number_entries.append(
-                                database_ec_number_entry)
+                            eligible_ec_number_entries.append(database_ec_number_entry)
                 if len(eligible_ec_number_entries) > 0:
                     break
             ec_number_entry = {}
@@ -446,12 +475,15 @@ def parse_brenda_json_for_model(sbml_path: str, brenda_json_path: str, output_js
                         ec_number_entry[metabolite_key] = metabolite_entry
                     else:
                         ec_number_entry[metabolite_key] = {
-                            **ec_number_entry[metabolite_key], **metabolite_entry}
+                            **ec_number_entry[metabolite_key],
+                            **metabolite_entry,
+                        }
             ec_number_entry["WILDCARD"] = True
             brenda_kcat_database_for_model[ec_number] = ec_number_entry
 
     json_write(output_json_path, brenda_kcat_database_for_model)
-    
+
+
 # SCRIPT-WIDE CONSTANTS
 # URL for SABIO-RK's kcat REST API
 QUERY_URL = "http://sabiork.h-its.org/sabioRestWebServices/kineticlawsExportTsv"
@@ -463,10 +495,11 @@ WAIT_TIME = 1.5
 # used all over AutoPACMEN.
 UNIT_MULTIPLIER: Dict[str, float] = {
     "s^(-1)": 1.0,
-    "min^(-1)": 1/60,
-    "h^(-1)": 1/(60*60),
+    "min^(-1)": 1 / 60,
+    "h^(-1)": 1 / (60 * 60),
 }
-    
+
+
 def ensure_folder_existence(folder: str) -> None:
     """Checks if the given folder exists. If not, the folder is created.
 
@@ -478,6 +511,7 @@ def ensure_folder_existence(folder: str) -> None:
         return
     os.makedirs(folder)
 
+
 def get_files(path: str) -> List[str]:
     """Returns the names of the files in the given folder as a list of strings.
 
@@ -486,10 +520,11 @@ def get_files(path: str) -> List[str]:
     * path: str ~ The path to the folder of which the file names shall be returned
     """
     files: List[str] = []
-    for (_, _, filenames) in os.walk(path):
+    for _, _, filenames in os.walk(path):
         files.extend(filenames)
     return files
-    
+
+
 def _add_wildcard_to_ec_number(ec_number: str, level: int) -> str:
     """Adds asterisk wildcards to the given EC number.
 
@@ -512,15 +547,16 @@ def _add_wildcard_to_ec_number(ec_number: str, level: int) -> str:
     * The wildcarded EC number as string
     """
     ec_number_list = ec_number.split(".")[::-1]
-    #print(ec_number_list,level)
+    # print(ec_number_list,level)
     i = 1
     while i <= level:
         if i < level:
-        #if i < level and len(ec_number_list)==4:#
+            # if i < level and len(ec_number_list)==4:#
             ec_number_list[i] = "*"
         i += 1
     wildcarded_ec_number = ".".join(ec_number_list[::-1])
     return wildcarded_ec_number
+
 
 def _extract_kcat_lines(result: csv.DictReader) -> List[str]:
     """Converts a SABIO-RK csv.DictReader line into a list of strings with the content of these lines.
@@ -539,6 +575,7 @@ def _extract_kcat_lines(result: csv.DictReader) -> List[str]:
             kcat_lines.append(row)
     return kcat_lines
 
+
 def _get_species_results(result: csv.DictReader) -> List[str]:
     """Returns the organism data from the given SABIO-RK API csv.DictReader
 
@@ -556,6 +593,7 @@ def _get_species_results(result: csv.DictReader) -> List[str]:
         if species not in species_results:
             species_results.append(species)
     return species_results
+
 
 def sabio_rk_query_with_string(query_string: str) -> str:
     """Call SABIO-RK API with the given query string.
@@ -580,7 +618,16 @@ def sabio_rk_query_with_string(query_string: str) -> str:
     # Build-up SABIO-RK query with a dictionary format that can be understood by the
     # requests library (this is also the way to retrieve potential huge amounts of
     # information as shown in SABIO-RK's API documentation).
-    query = {"fields[]": ["ECNumber", "KeggReactionID", "Organism", "Parameter", "Substrate"], "q": query_string}
+    query = {
+        "fields[]": [
+            "ECNumber",
+            "KeggReactionID",
+            "Organism",
+            "Parameter",
+            "Substrate",
+        ],
+        "q": query_string,
+    }
 
     # Send the request to SABIO-RK :D
     request = requests.post(QUERY_URL, params=query)
@@ -591,8 +638,8 @@ def sabio_rk_query_with_string(query_string: str) -> str:
     try:
         request.raise_for_status()
     except Exception:
-        #print("SABIO-RK API error with query:")
-        #print(query_string)
+        # print("SABIO-RK API error with query:")
+        # print(query_string)
         time.sleep(WAIT_TIME)
         return "NO_RESULT"
 
@@ -601,6 +648,7 @@ def sabio_rk_query_with_string(query_string: str) -> str:
 
     # Return successful search result in the given csv-like structure format.
     return request.text
+
 
 def sabio_rk_query_with_query_dicts(query_dicts: List[Any]) -> str:
     """Performs a SABIO-RK query with given query dicts and converts them into a string
@@ -625,6 +673,7 @@ def sabio_rk_query_with_query_dicts(query_dicts: List[Any]) -> str:
     # Perform the API call :D
     return sabio_rk_query_with_string(query_string)
 
+
 def sabio_rk_query_get_csv_lines(query_dicts: List[Any]) -> Any:
     """Returns the result of a SABIo-RK API call with the given query dicts as csvReader lines
 
@@ -645,8 +694,13 @@ def sabio_rk_query_get_csv_lines(query_dicts: List[Any]) -> Any:
     else:
         return list(csv.DictReader(io.StringIO(result), delimiter="\t"))
 
-def get_id_associated_kcats(searched_ids: List[str], id_type: str,
-                            bigg_id_name_mapping_path: str, batch_size: int = 5) -> Dict[str, Any]:
+
+def get_id_associated_kcats(
+    searched_ids: List[str],
+    id_type: str,
+    bigg_id_name_mapping_path: str,
+    batch_size: int = 5,
+) -> Dict[str, Any]:
     """Returns a dictionary with SABIO-RK kcat data for the given EC numbers or KEGG IDs.
 
     This function calls the SABIO-RK API.
@@ -695,7 +749,7 @@ def get_id_associated_kcats(searched_ids: List[str], id_type: str,
     # In order to save search time, use the seat (i.e., a list where
     # every member occurs only once) of the given searched IDs
     searched_ids = list(set(searched_ids))
-    
+
     # Set the given ID name to the name which SABIO-RK uses for them
     if id_type == "EC":
         id_name = "ECNumber"
@@ -712,7 +766,7 @@ def get_id_associated_kcats(searched_ids: List[str], id_type: str,
     # Loop while not all IDs were searched \o/
     while batch_start < len(searched_ids):
         # Get the batch for the search :-)
-        batch = searched_ids[batch_start: batch_start + batch_size]
+        batch = searched_ids[batch_start : batch_start + batch_size]
         # The query dicts contain a list of dictionaries which contain
         # the data for a SABIO-RK search entry
         query_dicts: List[Dict[str, str]] = []
@@ -725,14 +779,20 @@ def get_id_associated_kcats(searched_ids: List[str], id_type: str,
             if cache_filename in cache_files:
                 cache_filepath = cache_basepath + cache_filename
                 output[ec_number] = json_load(cache_filepath)
-                #print(f"Loading {cache_filename}...")
+                # print(f"Loading {cache_filename}...")
             # Otherwise, create an actual SABIO-RK API search query
             else:
-                query_dicts.append({id_name: ec_number, "Parametertype": "kcat", "EnzymeType": "wildtype"})
+                query_dicts.append(
+                    {
+                        id_name: ec_number,
+                        "Parametertype": "kcat",
+                        "EnzymeType": "wildtype",
+                    }
+                )
         # If not all of the searched IDs are present in the cache...
         if len(query_dicts) > 0:
             # ...use SABIO-RK's API :D
-            #print(f"Performing query {query_dicts}...")
+            # print(f"Performing query {query_dicts}...")
             result = sabio_rk_query_get_csv_lines(query_dicts)
 
             # If there was an error with the SABIO-RK result (i.e., no result found or an invalid given ID),
@@ -758,7 +818,9 @@ def get_id_associated_kcats(searched_ids: List[str], id_type: str,
             ec_number = row[id_name]
             # Generate a lowercarse and semicolon seperated list of substrates
             substrates_names = row["Substrate"]
-            substrates_list = [x.lower() for x in substrates_names.replace("+", "").split(";")]
+            substrates_list = [
+                x.lower() for x in substrates_names.replace("+", "").split(";")
+            ]
             substrates_list = sorted(substrates_list)
             # Convert the substrates name list into a BIGG ID list (only works
             # if there is a name<->BIGG ID mapping present for each substrate)
@@ -807,14 +869,20 @@ def get_id_associated_kcats(searched_ids: List[str], id_type: str,
         # which fit into the wildcard (i.e 1.1.1.123 in 1.1.1.*) :D
         for wildcarded_ec_number in wildcarded_searched_ec_numbers:
             # Ste the cache name for the wildcarded EC number
-            cache_filename = wildcarded_ec_number.replace(".", "_").replace("*", "W") + ".json"
+            cache_filename = (
+                wildcarded_ec_number.replace(".", "_").replace("*", "W") + ".json"
+            )
             # If the wildcarded EC number cannot be found in the cache, search for
             # fitting EC numbers, and combine their entries into a huge entry for the
             # wildcarded EC number
             if cache_filename not in cache_files:
                 fitting_ec_numbers = []
                 for found_ec_number in temp_ec_numbers_found_in_search:
-                    if is_fitting_ec_numbers(wildcarded_ec_number, found_ec_number, wildcarded_ec_number.count("*")):
+                    if is_fitting_ec_numbers(
+                        wildcarded_ec_number,
+                        found_ec_number,
+                        wildcarded_ec_number.count("*"),
+                    ):
                         fitting_ec_numbers.append(found_ec_number)
 
                 # Combine the EC number entries of fitting EC numbers :D
@@ -823,25 +891,55 @@ def get_id_associated_kcats(searched_ids: List[str], id_type: str,
                     fitting_ec_number_result = output[fitting_ec_number]
                     for metabolite_key in fitting_ec_number_result.keys():
                         if metabolite_key not in wildcarded_ec_number_dict.keys():
-                            wildcarded_ec_number_dict[metabolite_key] = fitting_ec_number_result[metabolite_key]
+                            wildcarded_ec_number_dict[metabolite_key] = (
+                                fitting_ec_number_result[metabolite_key]
+                            )
                         else:
-                            for organism_key in fitting_ec_number_result[metabolite_key].keys():
-                                if organism_key not in wildcarded_ec_number_dict[metabolite_key].keys():
-                                    wildcarded_ec_number_dict[metabolite_key][organism_key] =\
-                                        copy.deepcopy(fitting_ec_number_result[metabolite_key][organism_key])
+                            for organism_key in fitting_ec_number_result[
+                                metabolite_key
+                            ].keys():
+                                if (
+                                    organism_key
+                                    not in wildcarded_ec_number_dict[
+                                        metabolite_key
+                                    ].keys()
+                                ):
+                                    wildcarded_ec_number_dict[metabolite_key][
+                                        organism_key
+                                    ] = copy.deepcopy(
+                                        fitting_ec_number_result[metabolite_key][
+                                            organism_key
+                                        ]
+                                    )
                                 else:
-                                    wildcarded_ec_number_dict[metabolite_key][organism_key] +=\
-                                        copy.deepcopy(fitting_ec_number_result[metabolite_key][organism_key])
-                                wildcarded_ec_number_dict[metabolite_key][organism_key] =\
-                                    list(set(wildcarded_ec_number_dict[metabolite_key][organism_key]))
+                                    wildcarded_ec_number_dict[metabolite_key][
+                                        organism_key
+                                    ] += copy.deepcopy(
+                                        fitting_ec_number_result[metabolite_key][
+                                            organism_key
+                                        ]
+                                    )
+                                wildcarded_ec_number_dict[metabolite_key][
+                                    organism_key
+                                ] = list(
+                                    set(
+                                        wildcarded_ec_number_dict[metabolite_key][
+                                            organism_key
+                                        ]
+                                    )
+                                )
                 # Create cache files for the searched wildcarded EC numbers \o/
                 if wildcarded_ec_number_dict != {}:
-                    json_write(cache_basepath + cache_filename, wildcarded_ec_number_dict)
+                    json_write(
+                        cache_basepath + cache_filename, wildcarded_ec_number_dict
+                    )
                     wildcard_output[wildcarded_ec_number] = wildcarded_ec_number_dict
             # If the wildcarded EC number is in the cache, load the cache file :D
             else:
-                wildcard_output[wildcarded_ec_number] = json_load(cache_basepath + cache_filename)
-                #print(f"Loading {cache_filename}...")
+                wildcard_output[wildcarded_ec_number] = json_load(
+                    cache_basepath + cache_filename
+                )
+                # print(f"Loading {cache_filename}...")
 
         # Continue with the next searched ID batch :D
         batch_start += batch_size
@@ -852,9 +950,10 @@ def get_id_associated_kcats(searched_ids: List[str], id_type: str,
 
     return output
 
-def get_ec_number_kcats_wildcard_search(ec_numbers: List[str],
-                                        bigg_id_name_mapping_path: str,
-                                        batch_size: int = 5) -> Dict[str, Any]:
+
+def get_ec_number_kcats_wildcard_search(
+    ec_numbers: List[str], bigg_id_name_mapping_path: str, batch_size: int = 5
+) -> Dict[str, Any]:
     """Returns EC number-dependent kcats using an incremental wildcard level until kcarts were found for all ECs.
 
     Arguments
@@ -890,7 +989,7 @@ def get_ec_number_kcats_wildcard_search(ec_numbers: List[str],
     </pre>
     'REST' stands for a substrate without found BIGG ID.
     """
-    #print("Starting EC numbers kcat search in SABIO-RK...")
+    # print("Starting EC numbers kcat search in SABIO-RK...")
 
     # We will look-up all EC numbers in SABIO-RK. If an EC number does not have an entry in
     # SABIO-RK, the wildcard level will become higher, e.g. 1.1.1.1 would become 1.1.1.*, and
@@ -908,33 +1007,38 @@ def get_ec_number_kcats_wildcard_search(ec_numbers: List[str],
     for wildcard_level in range(5):
         # Get the list of all EC numbers which we want to search, i.e. all EC numbers which
         # are not already found.
-        ec_numbers_to_analyze = list(set(ec_numbers) ^ set(all_found_ec_numbers))  # Difference
+        ec_numbers_to_analyze = list(
+            set(ec_numbers) ^ set(all_found_ec_numbers)
+        )  # Difference
         # Add the current wildcard level to the searched EC numbers
-        searched_ec_numbers = [_add_wildcard_to_ec_number(x, wildcard_level) for x in ec_numbers_to_analyze]
+        searched_ec_numbers = [
+            _add_wildcard_to_ec_number(x, wildcard_level) for x in ec_numbers_to_analyze
+        ]
         # If no searched EC numbers are left with the current wildcard level, quit the for loop since we
         # are done :D
         if searched_ec_numbers == []:
             break
         # If there are searched EC numbers left, get the EC-number associated kcat entries
-        #print(f"Wildcard level {wildcard_level}...")
-        #print(searched_ec_numbers)
+        # print(f"Wildcard level {wildcard_level}...")
+        # print(searched_ec_numbers)
         if wildcard_level < 3:
             # With a low wildcard level, the default batch size of 5 is acceptable and
             # helps to search quicker
-            resulting_ec_number_kcat_mapping = get_id_associated_kcats(searched_ec_numbers, "EC",
-                                                                       bigg_id_name_mapping_path)
+            resulting_ec_number_kcat_mapping = get_id_associated_kcats(
+                searched_ec_numbers, "EC", bigg_id_name_mapping_path
+            )
         else:
             # With a high wildcard level, no batching of searched EC numbers should be done since
             # the high number of results would make the search much slower D:
             searched_ec_numbers = list(set(searched_ec_numbers))
-            if '1.*.*.*' in searched_ec_numbers:
-                searched_ec_numbers.remove('1.*.*.*')
-            if '3.*.*.*' in searched_ec_numbers:
-                searched_ec_numbers.remove('3.*.*.*')
-            #print(searched_ec_numbers)
-            resulting_ec_number_kcat_mapping = get_id_associated_kcats(searched_ec_numbers, "EC",
-                                                                       bigg_id_name_mapping_path,
-                                                                       batch_size=1)
+            if "1.*.*.*" in searched_ec_numbers:
+                searched_ec_numbers.remove("1.*.*.*")
+            if "3.*.*.*" in searched_ec_numbers:
+                searched_ec_numbers.remove("3.*.*.*")
+            # print(searched_ec_numbers)
+            resulting_ec_number_kcat_mapping = get_id_associated_kcats(
+                searched_ec_numbers, "EC", bigg_id_name_mapping_path, batch_size=1
+            )
 
         # In the following loops, the resulting dictionaries for wildcarded EC numbers are mapped to
         # the searched EC numbers, e.g. the if 1.1.1.1233 and 1.1.1.2143 are searched and no results
@@ -946,14 +1050,19 @@ def get_ec_number_kcats_wildcard_search(ec_numbers: List[str],
             if ec_number in all_found_ec_numbers:
                 continue
             for found_ec_number in resulting_found_ec_numbers:
-                if not is_fitting_ec_numbers(ec_number, found_ec_number, wildcard_level):
+                if not is_fitting_ec_numbers(
+                    ec_number, found_ec_number, wildcard_level
+                ):
                     continue
                 kcat = resulting_ec_number_kcat_mapping[found_ec_number]
                 if ec_number not in list(ec_number_kcat_mapping.keys()):
                     ec_number_kcat_mapping[ec_number] = kcat
                     temp_all_found_ec_numbers += [ec_number]
                 else:
-                    ec_number_kcat_mapping[ec_number] = {**ec_number_kcat_mapping[ec_number], **kcat}
+                    ec_number_kcat_mapping[ec_number] = {
+                        **ec_number_kcat_mapping[ec_number],
+                        **kcat,
+                    }
                 if wildcard_level == 0:
                     ec_number_kcat_mapping[ec_number]["WILDCARD"] = False
                 else:
@@ -978,7 +1087,10 @@ result = get_ec_number_kcats_wildcard_search(ec_numbers)
 print(result)
 """
 
-def parse_sabio_rk_for_model(model: cobra.Model, json_output_path: str, bigg_id_name_mapping_path: str) -> None:
+
+def parse_sabio_rk_for_model(
+    model: cobra.Model, json_output_path: str, bigg_id_name_mapping_path: str
+) -> None:
     """Retrieves kcats from SABIO-RK for the given model and stores it in a JSON for the given model in the given path.
 
     Algorithm
@@ -1025,19 +1137,23 @@ def parse_sabio_rk_for_model(model: cobra.Model, json_output_path: str, bigg_id_
         if "ec-code" not in reaction.annotation.keys():
             continue
         ec_codes = reaction.annotation["ec-code"]
-        if type(ec_codes) is str:
+        if isinstance(ec_codes, str):
             ec_codes = [ec_codes]
         ec_numbers_list += ec_codes
     ec_numbers_list = list(set(ec_numbers_list))
 
     # GET KCATS FOR EC NUMBERS
     ec_number_kcat_mapping = get_ec_number_kcats_wildcard_search(
-        ec_numbers_list, bigg_id_name_mapping_path)
+        ec_numbers_list, bigg_id_name_mapping_path
+    )
 
     json_write(json_output_path, ec_number_kcat_mapping)
 
-#Mr.MAO
-def parse_sabio_rk_for_eclist(ec_numbers_list: List[str], json_output_path: str, bigg_id_name_mapping_path: str) -> None:
+
+# Mr.MAO
+def parse_sabio_rk_for_eclist(
+    ec_numbers_list: List[str], json_output_path: str, bigg_id_name_mapping_path: str
+) -> None:
     """Retrieves kcats from SABIO-RK for the given model and stores it in a JSON for the given model in the given path.
 
     Algorithm
@@ -1080,11 +1196,15 @@ def parse_sabio_rk_for_eclist(ec_numbers_list: List[str], json_output_path: str,
     """
     # GET KCATS FOR EC NUMBERS
     ec_number_kcat_mapping = get_ec_number_kcats_wildcard_search(
-        ec_numbers_list, bigg_id_name_mapping_path)
+        ec_numbers_list, bigg_id_name_mapping_path
+    )
 
     json_write(json_output_path, ec_number_kcat_mapping)
-    
-def parse_sabio_rk_for_model_with_sbml(sbml_path: str, json_output_path: str, bigg_id_name_mapping_path: str) -> None:
+
+
+def parse_sabio_rk_for_model_with_sbml(
+    sbml_path: str, json_output_path: str, bigg_id_name_mapping_path: str
+) -> None:
     """See this module's parse_sabio_rk_for_model() documentation. This function uses an SBML path.
 
     Arguments
@@ -1094,10 +1214,12 @@ def parse_sabio_rk_for_model_with_sbml(sbml_path: str, json_output_path: str, bi
     """
     # LOAD SBML MODEL
     model: cobra.Model = cobra.io.read_sbml_model(sbml_path)
-    parse_sabio_rk_for_model(model, json_output_path,
-                             bigg_id_name_mapping_path)
-    
-def create_combined_kcat_database(sabio_rk_kcat_database_path: str, brenda_kcat_database_path: str, output_path: str) -> None:
+    parse_sabio_rk_for_model(model, json_output_path, bigg_id_name_mapping_path)
+
+
+def create_combined_kcat_database(
+    sabio_rk_kcat_database_path: str, brenda_kcat_database_path: str, output_path: str
+) -> None:
     """Creates a combined JSON of the given SABIO-K and BRENDA kcat databases with non-wildcard entries only.
 
     Arguments
@@ -1138,16 +1260,20 @@ def create_combined_kcat_database(sabio_rk_kcat_database_path: str, brenda_kcat_
         # Get the wildcard status (i.e., found with a * wildcard?) and check if the EC number occurs anywhere...
         # ...for SABIO-RK
         if ec_number_key not in sabio_rk_database.keys():
-            #print(f"WARNING: EC number {ec_number_key} could not be found in SABIO-RK, even with wildcards")
-            #print("Possible reasons: The EC number format is invalid or there was an SABIO-RK API error")
-            is_sabio_rk_from_wildcard = True  # Let the combined database ignore this entry
+            # print(f"WARNING: EC number {ec_number_key} could not be found in SABIO-RK, even with wildcards")
+            # print("Possible reasons: The EC number format is invalid or there was an SABIO-RK API error")
+            is_sabio_rk_from_wildcard = (
+                True  # Let the combined database ignore this entry
+            )
         else:
             is_sabio_rk_from_wildcard = sabio_rk_database[ec_number_key]["WILDCARD"]
         # ...and for BRENDA
         if ec_number_key not in brenda_database.keys():
-            #print(f"WARNING: EC number {ec_number_key} could not be found in SABIO-RK, even with wildcards")
-            #print("Possible reason: The EC number format is invalid")
-            is_brenda_from_wildcard = True  # Let the combined database ignore this entry
+            # print(f"WARNING: EC number {ec_number_key} could not be found in SABIO-RK, even with wildcards")
+            # print("Possible reason: The EC number format is invalid")
+            is_brenda_from_wildcard = (
+                True  # Let the combined database ignore this entry
+            )
         else:
             is_brenda_from_wildcard = brenda_database[ec_number_key]["WILDCARD"]
 
@@ -1163,7 +1289,9 @@ def create_combined_kcat_database(sabio_rk_kcat_database_path: str, brenda_kcat_
             # ...by reading their metabolites...
             sabio_rk_metabolite_keys = list(sabio_rk_database[ec_number_key].keys())
             brenda_metabolite_keys = list(brenda_database[ec_number_key].keys())
-            metabolite_keys = list(set(sabio_rk_metabolite_keys + brenda_metabolite_keys))
+            metabolite_keys = list(
+                set(sabio_rk_metabolite_keys + brenda_metabolite_keys)
+            )
             # ...going through them...
             for metabolite_key in metabolite_keys:
                 # ...excluding the WILDCARD key...
@@ -1171,11 +1299,16 @@ def create_combined_kcat_database(sabio_rk_kcat_database_path: str, brenda_kcat_
                     continue
                 # ...and adding the metabolites according to their presence in the databases :D
                 is_metabolite_in_brenda: bool = metabolite_key in brenda_metabolite_keys
-                is_metabolite_in_sabio_rk: bool = metabolite_key in sabio_rk_metabolite_keys
+                is_metabolite_in_sabio_rk: bool = (
+                    metabolite_key in sabio_rk_metabolite_keys
+                )
                 if is_metabolite_in_brenda and is_metabolite_in_sabio_rk:
                     sabio_rk_entry = sabio_rk_database[ec_number_key][metabolite_key]
                     brenda_entry = brenda_database[ec_number_key][metabolite_key]
-                    combined_database[ec_number_key][metabolite_key] = {**sabio_rk_entry, **brenda_entry}
+                    combined_database[ec_number_key][metabolite_key] = {
+                        **sabio_rk_entry,
+                        **brenda_entry,
+                    }
                 elif is_metabolite_in_brenda:
                     brenda_entry = brenda_database[ec_number_key][metabolite_key]
                     combined_database[ec_number_key][metabolite_key] = brenda_entry
@@ -1195,10 +1328,12 @@ def create_combined_kcat_database(sabio_rk_kcat_database_path: str, brenda_kcat_
             combined_database[ec_number_key]["WILDCARD"] = False
             combined_database[ec_number_key]["SOURCE"] = "BRENDA"
     json_write(output_path, combined_database)
-    
+
+
 # SCRIPT-WIDE CONSTANTS
-WAIT_TIME = .5  # Time to wait for each API call
+WAIT_TIME = 0.5  # Time to wait for each API call
 NCBI_BATCH_SIZE = 20
+
 
 def get_entrez_id_from_organism_full_name(organism_full_name):
     """Get organism's Entrez numeric identifier.
@@ -1224,9 +1359,10 @@ def get_entrez_id_from_organism_full_name(organism_full_name):
     organism_ncbi_id = record["IdList"][0]
     # txid+NUMBER+[ORGN] is the form that is used for NCBI BLASTP searches to restrict a search
     # to an organism using the Entrez query constraint input.
-    organism_ncbi_id = "txid"+organism_ncbi_id+"[ORGN]"
+    organism_ncbi_id = "txid" + organism_ncbi_id + "[ORGN]"
     # Return the retrieved ID :D
     return organism_ncbi_id
+
 
 def get_taxonomy_from_organism_ncbi_id(organism_ncbi_id):
     """Get organism's taxonomy from NCBI Taxonomy using Biopython functions.
@@ -1246,7 +1382,10 @@ def get_taxonomy_from_organism_ncbi_id(organism_ncbi_id):
     taxonomy = [i.lstrip() for i in taxonomy]
     return taxonomy
 
-def get_entrez_id_from_organism_full_name_batch(organism_full_names: List[str]) -> List[str]:
+
+def get_entrez_id_from_organism_full_name_batch(
+    organism_full_names: List[str],
+) -> List[str]:
     """Retrieves the Entrez numeric ID of the given organisms.
 
     This numeric identifier is neccessary for BLAST and NCBI TAXONOMY
@@ -1262,7 +1401,9 @@ def get_entrez_id_from_organism_full_name_batch(organism_full_names: List[str]) 
     organism_ncbi_ids_result: List[str] = []
     # Go through each organism :D
     while batch_start < len(organism_full_names):
-        organism_full_names_slice = organism_full_names[batch_start:batch_start+NCBI_BATCH_SIZE]
+        organism_full_names_slice = organism_full_names[
+            batch_start : batch_start + NCBI_BATCH_SIZE
+        ]
         query_names = " OR ".join(organism_full_names_slice)
         # An e-mail has to be set, you may change it to yours if you want to
         # be notified if any problems occur.
@@ -1276,15 +1417,17 @@ def get_entrez_id_from_organism_full_name_batch(organism_full_names: List[str]) 
         organism_ncbi_ids = record["IdList"][::-1]
         # txid+NUMBER+[ORGN] is the form that is used for NCBI BLASTP searches to restrict a search
         # to an organism using the Entrez query constraint input.
-        organism_ncbi_ids_result += ["txid"+x +
-                                     "[ORGN]" for x in organism_ncbi_ids]
+        organism_ncbi_ids_result += ["txid" + x + "[ORGN]" for x in organism_ncbi_ids]
 
         batch_start += NCBI_BATCH_SIZE
         time.sleep(WAIT_TIME)
     # Return the retrieved IDs :D
     return organism_ncbi_ids_result
 
-def get_taxonomy_from_organism_ncbi_id_batch(organism_ncbi_ids: List[str]) -> Dict[str, List[str]]:
+
+def get_taxonomy_from_organism_ncbi_id_batch(
+    organism_ncbi_ids: List[str],
+) -> Dict[str, List[str]]:
     """Get the taxonomy from NCBI Taxonomy of the given organisms using Biopython functions.
 
     The taxonomy is returned as Dictionary (Dict[str, List[str]) for each organism,
@@ -1299,7 +1442,9 @@ def get_taxonomy_from_organism_ncbi_id_batch(organism_ncbi_ids: List[str]) -> Di
     taxonomies: Dict[str, List[str]] = {}
     batch_start = 0
     while batch_start < len(organism_ncbi_ids):
-        organism_ncbi_ids_slice = organism_ncbi_ids[batch_start:batch_start+NCBI_BATCH_SIZE]
+        organism_ncbi_ids_slice = organism_ncbi_ids[
+            batch_start : batch_start + NCBI_BATCH_SIZE
+        ]
         query_ids = " OR ".join(organism_ncbi_ids_slice)
         Entrez.email = "x@x.x"
         handle = Entrez.efetch(db="Taxonomy", id=query_ids, retmode="xml")
@@ -1312,7 +1457,9 @@ def get_taxonomy_from_organism_ncbi_id_batch(organism_ncbi_ids: List[str]) -> Di
     return taxonomies
 
 
-def most_taxonomic_similar(base_species: str, taxonomy_dict: Dict[str, List[str]]) -> Dict[str, int]:
+def most_taxonomic_similar(
+    base_species: str, taxonomy_dict: Dict[str, List[str]]
+) -> Dict[str, int]:
     """Returns a dictionary with a score of taxonomic distance from the given organism.
 
     e.g. if base_species is "Escherichia coli" and taxonomy_dict is
@@ -1362,7 +1509,8 @@ taxonomies = get_taxonomy_from_organism_ncbi_id_batch(organism_ncbi_ids)
 print(taxonomies)
 print(most_taxonomic_similar("Escherichia coli", taxonomies))
 """
-    
+
+
 def standardize_folder(folder: str) -> str:
     """Returns for the given folder path is returned in a more standardized way.
 
@@ -1382,9 +1530,12 @@ def standardize_folder(folder: str) -> str:
     if folder[-1] != "/":
         folder += "/"
 
-    return folder    
+    return folder
 
-def _get_kcat_from_protein_kcat_database(searched_direction: str, reaction: cobra.Reaction, protein_kcat_database):
+
+def _get_kcat_from_protein_kcat_database(
+    searched_direction: str, reaction: cobra.Reaction, protein_kcat_database
+):
     """Returns the kcat from the given protein<->kcat database for the given reaction, if there is one.
 
     The kcat is minimum of the maximal kcats for each protein of the reaction which can be found in the database.
@@ -1411,7 +1562,7 @@ def _get_kcat_from_protein_kcat_database(searched_direction: str, reaction: cobr
             continue
         try:
             kcat_direction = protein_kcat_database[gene_name]["direction"][reaction.id]
-        except:
+        except KeyError:
             pass
         else:
             max_kcat = max(protein_kcat_database[gene_name]["kcats"])
@@ -1430,9 +1581,14 @@ def _get_kcat_from_protein_kcat_database(searched_direction: str, reaction: cobr
     return min_max_kcat
 
 
-def _get_kcat_list(searched_metabolites: List[str], complete_entry: Dict[str, Any], organism: str,
-                   searched_direction: str, reaction: cobra.Reaction,
-                   protein_kcat_database) -> List[float]:
+def _get_kcat_list(
+    searched_metabolites: List[str],
+    complete_entry: Dict[str, Any],
+    organism: str,
+    searched_direction: str,
+    reaction: cobra.Reaction,
+    protein_kcat_database,
+) -> List[float]:
     """Returns a list of kcats for the given reaction, created with a taxonomic search and usingg the protein kcat database.
 
     Algorithm
@@ -1482,16 +1638,16 @@ def _get_kcat_list(searched_metabolites: List[str], complete_entry: Dict[str, An
     species_to_search: List[str] = []
     taxonomy_dict_cache: Dict[str, List[str]] = {}
     for species in all_species:
-        species=species.replace('/','_')
+        species = species.replace("/", "_")
         cache_filename = species + "_taxonomy"
-        #print(cache_filename)
-        #cache_filename=cache_filename.replace('/','_')
-        #print(cache_filename)
+        # print(cache_filename)
+        # cache_filename=cache_filename.replace('/','_')
+        # print(cache_filename)
         if cache_filename in cache_files:
             cache_filepath = cache_basepath + cache_filename
             taxonomy_dict_cache[species] = pickle_load(cache_filepath)
-        elif cache_filename+"_NA" in cache_files:
-            cache_filepath = cache_basepath + cache_filename+"_NA"
+        elif cache_filename + "_NA" in cache_files:
+            cache_filepath = cache_basepath + cache_filename + "_NA"
             taxonomy_dict_cache[species] = pickle_load(cache_filepath)
         else:
             species_to_search.append(species)
@@ -1500,10 +1656,10 @@ def _get_kcat_list(searched_metabolites: List[str], complete_entry: Dict[str, An
     # taxonomy dict which includes 'NOT FOUND' for all non-found organisms and the
     # taxonomies for each found organism.
     if len(species_to_search) > 0:
-        #print(species_to_search)
+        # print(species_to_search)
         ncbi_ids = get_entrez_id_from_organism_full_name_batch(species_to_search)
         taxonomy_dict_search = get_taxonomy_from_organism_ncbi_id_batch(ncbi_ids)
-        #print(taxonomy_dict_search)
+        # print(taxonomy_dict_search)
         for searched_species in species_to_search:
             if searched_species not in taxonomy_dict_search.keys():
                 taxonomy_dict_search[searched_species] = ["NOT FOUND"]
@@ -1523,53 +1679,68 @@ def _get_kcat_list(searched_metabolites: List[str], complete_entry: Dict[str, An
     score_dict = most_taxonomic_similar(organism, full_taxonomy_dict)
     for species in full_taxonomy_dict.keys():
         if species not in score_dict:
-            score_dict[species] = max(score_dict.values())+1
+            score_dict[species] = max(score_dict.values()) + 1
     # If we added the organism without kcat entries for it, we delete its distance
     # since there is no kcat which can be retrieved from it
     if organism_added:
-        del(score_dict[organism])
-    
-    #按照物种近源性进行循环（循环终止条件kcat列表长度和物种距离）
+        del score_dict[organism]
+
+    # 按照物种近源性进行循环（循环终止条件kcat列表长度和物种距离）
     # Loop through the given organisms taxonomically and start with the lowest distance
     # Keep looping to higher taxonomic distances until the highest distance is reached
     # or the desired minimal number of kcat entries is reached
     minimal_distance = min(score_dict.values())
     maximal_distance = max(score_dict.values())
     current_distance = minimal_distance
-    num_min_kcat_entries = 10#为什么是保留10条记录？
+    num_min_kcat_entries = 10  # 为什么是保留10条记录？
     kcat_list: List[float] = []
-    species_list: List[str] = []  #Mr.Mao 
-    kcat_extend='False'#Mr.Mao 
-    ori_kcat: List[float] = []#Mr.Mao 
-    #First,kcat
+    species_list: List[str] = []  # Mr.Mao
+    kcat_extend = "False"  # Mr.Mao
+    ori_kcat: List[float] = []  # Mr.Mao
+    # First,kcat
     if organism in species_kcat_mapping.keys():
-        kcat_list=species_kcat_mapping[organism]
-        ori_kcat=species_kcat_mapping[organism]
-    #Last,other species
+        kcat_list = species_kcat_mapping[organism]
+        ori_kcat = species_kcat_mapping[organism]
+    # Last,other species
     else:
-        while (len(kcat_list) < num_min_kcat_entries) and (current_distance <= maximal_distance):
+        while (len(kcat_list) < num_min_kcat_entries) and (
+            current_distance <= maximal_distance
+        ):
             for species in score_dict.keys():
-                if species not in species_kcat_mapping.keys():  # e.g. soil bacterium -> bacterium
+                if (
+                    species not in species_kcat_mapping.keys()
+                ):  # e.g. soil bacterium -> bacterium
                     continue
-                if score_dict[species] == current_distance and species!=organism:#Mr.Mao
+                if (
+                    score_dict[species] == current_distance and species != organism
+                ):  # Mr.Mao
                     kcat_list += species_kcat_mapping[species]
                     species_list.append(species)
-                    kcat_extend='True'
+                    kcat_extend = "True"
             current_distance += 1
     ##########################
     # Get the protein database kcat for this reaction (if there is one, otherwise it returns math.nan)
     if protein_kcat_database != {}:
-        protein_database_kcat = _get_kcat_from_protein_kcat_database(searched_direction, reaction, protein_kcat_database)
+        protein_database_kcat = _get_kcat_from_protein_kcat_database(
+            searched_direction, reaction, protein_kcat_database
+        )
 
         # Add the protein database kcat if there is one, it will influence the resulting kcat since a mean is used
         if protein_database_kcat is not math.nan:
             kcat_list.append(protein_database_kcat)
 
-    return [kcat_list,ori_kcat,species_list,kcat_extend]
+    return [kcat_list, ori_kcat, species_list, kcat_extend]
 
 
-def _get_kcat(searched_metabolites, complete_entry, organism: str, searched_direction: str, reaction: cobra.Reaction,
-              protein_kcat_database, type_of_kcat_selection: str = "mean") -> float:
+def _get_kcat(
+    searched_metabolites,
+    complete_entry,
+    organism: str,
+    searched_direction: str,
+    reaction: cobra.Reaction,
+    protein_kcat_database,
+    type_of_kcat_selection: str = "mean",
+) -> float:
     """Returns the kcat for the reaction with the searched metabolites, the given organism and the given complete entry.
 
     Arguments
@@ -1590,16 +1761,30 @@ def _get_kcat(searched_metabolites, complete_entry, organism: str, searched_dire
     With the final kcat list, the mean of the kcats is taken and returned as output.
     """
     # Get the list of all eligible kcats
-    [kcat_list,ori_kcat,species_list,kcat_extend]= _get_kcat_list(searched_metabolites, complete_entry, organism, searched_direction, reaction, protein_kcat_database)#Mr.Mao
-    
+    [kcat_list, ori_kcat, species_list, kcat_extend] = _get_kcat_list(
+        searched_metabolites,
+        complete_entry,
+        organism,
+        searched_direction,
+        reaction,
+        protein_kcat_database,
+    )  # Mr.Mao
+
     ###change code by Mr.Mao###
     # If the list is shorter than 10, search without any metabolite constraint in order to potentially get more kcats
     if len(kcat_list) < 10:
         searched_metabolites = ["ALL"]
-        [kcat_list,ori_kcat,species_list,kcat_extend] = _get_kcat_list(searched_metabolites, complete_entry, organism, searched_direction, reaction, protein_kcat_database)#Mr.Mao
+        [kcat_list, ori_kcat, species_list, kcat_extend] = _get_kcat_list(
+            searched_metabolites,
+            complete_entry,
+            organism,
+            searched_direction,
+            reaction,
+            protein_kcat_database,
+        )  # Mr.Mao
 
     ##########################
-    
+
     # Take the eligible kcats using the given selection method
     if type_of_kcat_selection == "mean":
         kcat = statistics.mean(kcat_list)
@@ -1612,10 +1797,12 @@ def _get_kcat(searched_metabolites, complete_entry, organism: str, searched_dire
         sys.exit(-1)
 
     # Return the determined kcat :D 返回的是10个kcat  'mean', 'median' or 'random'
-    return [kcat,kcat_list,ori_kcat,species_list,kcat_extend]
+    return [kcat, kcat_list, ori_kcat, species_list, kcat_extend]
 
 
-def _get_searched_metabolites(complete_entry, reaction_part_bigg_ids: List[str]) -> List[str]:
+def _get_searched_metabolites(
+    complete_entry, reaction_part_bigg_ids: List[str]
+) -> List[str]:
     """Returns which metabolites have a valid BIGG ID that ca be found in the complete entry.
 
     Arguments
@@ -1653,9 +1840,17 @@ def _get_searched_metabolites(complete_entry, reaction_part_bigg_ids: List[str])
 
     return eligible_metabolites
 
+
 # PUBLIC FUNCTIONS
-def get_reactions_kcat_mapping(sbml_path: str, project_folder: str, project_name: str,organism: str,kcat_database_path: str,
-                                protein_kcat_database_path: str,type_of_kcat_selection: str) -> None:
+def get_reactions_kcat_mapping(
+    sbml_path: str,
+    project_folder: str,
+    project_name: str,
+    organism: str,
+    kcat_database_path: str,
+    protein_kcat_database_path: str,
+    type_of_kcat_selection: str,
+) -> None:
     """Returns a reaction<->kcat mapping for the given model :D
 
     The selection of kcats is depending on the affected metabolites of the reaction direction (one
@@ -1715,11 +1910,15 @@ def get_reactions_kcat_mapping(sbml_path: str, project_folder: str, project_name
             # 0 means that no kcat can be assigned
             forward_kcat: Any = 0
             reverse_kcat: Any = 0
-            
+
             if protein_kcat_database != {}:
                 # Retrieve the kcats from the protein-dependent database :D
-                forward_kcat = _get_kcat_from_protein_kcat_database("forward", reaction, protein_kcat_database)
-                reverse_kcat = _get_kcat_from_protein_kcat_database("reverse", reaction, protein_kcat_database)
+                forward_kcat = _get_kcat_from_protein_kcat_database(
+                    "forward", reaction, protein_kcat_database
+                )
+                reverse_kcat = _get_kcat_from_protein_kcat_database(
+                    "reverse", reaction, protein_kcat_database
+                )
 
             # If no kcat could be assigned, set the kcat to math.nan
             # which indicates this case
@@ -1734,14 +1933,14 @@ def get_reactions_kcat_mapping(sbml_path: str, project_folder: str, project_name
             reactions_kcat_mapping[reaction.id]["reverse"] = reverse_kcat
 
             # Print the assigned kcats
-            #_print_assigned_kcats(reaction.id, forward_kcat, reverse_kcat)
+            # _print_assigned_kcats(reaction.id, forward_kcat, reverse_kcat)
             continue
 
         # Retrieve the reaction's associated EC numbers
         reaction_ids = reaction.annotation["ec-code"]
         # If only one EC number is given, set the EC number string to
         # a list in order to make it work with the following code lines
-        if type(reaction_ids) is str:
+        if isinstance(reaction_ids, str):
             reaction_ids = [reaction_ids]
         # Get all EC numbers which do not contain a - wildcard, such as
         # in 2.1.1.-
@@ -1760,14 +1959,14 @@ def get_reactions_kcat_mapping(sbml_path: str, project_folder: str, project_name
         complete_entry: Dict[str, Any] = {}
         complete_entry["ALL"] = {}
         # Go through each reaction ID :D
-        ##########################   
-        
+        ##########################
+
         for reaction_id in eligible_reaction_ids:
             # If the EC number could not be found in the given EC number<->kcat
-            # database, print it and proceed with the next eligible EC number            
+            # database, print it and proceed with the next eligible EC number
             if reaction_id not in kcat_database.keys():
-                #print(f"INFO: No entry for EC number {reaction_id}")
-                #print("")
+                # print(f"INFO: No entry for EC number {reaction_id}")
+                # print("")
                 continue
             # Otherwise, get the reaction ID entry from the given database :D
             reaction_id_entry = kcat_database[reaction_id]
@@ -1794,9 +1993,13 @@ def get_reactions_kcat_mapping(sbml_path: str, project_folder: str, project_name
                         complete_entry["ALL"][species_key] = []
                     # Add the list of kcats of the currently analyzed EC number to the current species
                     # and the current metabolite, and for "ALL"
-                    complete_entry[metabolite_key][species_key] += reaction_id_entry[metabolite_key][species_key]
-                    complete_entry["ALL"][species_key] += reaction_id_entry[metabolite_key][species_key]
-        
+                    complete_entry[metabolite_key][species_key] += reaction_id_entry[
+                        metabolite_key
+                    ][species_key]
+                    complete_entry["ALL"][species_key] += reaction_id_entry[
+                        metabolite_key
+                    ][species_key]
+
         # If no entries with kcats could be found for any of the eligible EC numbers, continue with the next reaction.
         if complete_entry["ALL"] == {}:
             continue
@@ -1816,36 +2019,81 @@ def get_reactions_kcat_mapping(sbml_path: str, project_folder: str, project_name
             educt_bigg_ids = ["X"]
         if len(product_bigg_ids) == 0:
             product_bigg_ids = ["X"]
-        
+
         ###
         # Get the metabolites which are used in the subsequent forward kcat search
         searched_educts = _get_searched_metabolites(complete_entry, educt_bigg_ids)
         # Get the forward kcat depending on the educts and the organism
-        [forward_kcat,forward_kcat_list,ori_forward_kcat,forward_species_list,kcat_extend] = _get_kcat(searched_educts, complete_entry, organism, "forward", reaction, protein_kcat_database, type_of_kcat_selection)#Mr.Mao
+        [
+            forward_kcat,
+            forward_kcat_list,
+            ori_forward_kcat,
+            forward_species_list,
+            kcat_extend,
+        ] = _get_kcat(
+            searched_educts,
+            complete_entry,
+            organism,
+            "forward",
+            reaction,
+            protein_kcat_database,
+            type_of_kcat_selection,
+        )  # Mr.Mao
 
         # Get the metabolites which are used in the subsequent forward kcat search
         searched_products = _get_searched_metabolites(complete_entry, product_bigg_ids)
         # Get the reverse kcat depending on the products and the organism
-        [reverse_kcat,reverse_kcat_list,ori_reverse_kcat,reverse_species_list,kcat_extend] = _get_kcat(searched_products, complete_entry, organism, "reverse", reaction, protein_kcat_database, type_of_kcat_selection)#Mr.Mao
+        [
+            reverse_kcat,
+            reverse_kcat_list,
+            ori_reverse_kcat,
+            reverse_species_list,
+            kcat_extend,
+        ] = _get_kcat(
+            searched_products,
+            complete_entry,
+            organism,
+            "reverse",
+            reaction,
+            protein_kcat_database,
+            type_of_kcat_selection,
+        )  # Mr.Mao
 
         # Set the found out kcats in the reactions<->kcat mapping :D
-        #print(reaction.id,forward_kcat,forward_kcat_list,ori_forward_kcat,reverse_kcat,reverse_kcat_list,ori_reverse_kcat)
+        # print(reaction.id,forward_kcat,forward_kcat_list,ori_forward_kcat,reverse_kcat,reverse_kcat_list,ori_reverse_kcat)
         reactions_kcat_mapping[reaction.id] = {}
         reactions_kcat_mapping[reaction.id]["forward"] = forward_kcat
-        reactions_kcat_mapping[reaction.id]["forward_kcat_list"] = forward_kcat_list#Mr.Mao
-        reactions_kcat_mapping[reaction.id]["forward_ori_kcat"] = ori_forward_kcat#Mr.Mao
-        reactions_kcat_mapping[reaction.id]["forward_species_list"] = forward_species_list#Mr.Mao
+        reactions_kcat_mapping[reaction.id][
+            "forward_kcat_list"
+        ] = forward_kcat_list  # Mr.Mao
+        reactions_kcat_mapping[reaction.id][
+            "forward_ori_kcat"
+        ] = ori_forward_kcat  # Mr.Mao
+        reactions_kcat_mapping[reaction.id][
+            "forward_species_list"
+        ] = forward_species_list  # Mr.Mao
         reactions_kcat_mapping[reaction.id]["reverse"] = reverse_kcat
-        reactions_kcat_mapping[reaction.id]["reverse_kcat_list"] = reverse_kcat_list#Mr.Mao
-        reactions_kcat_mapping[reaction.id]["reverse_ori_kcat"] = ori_reverse_kcat#Mr.Mao
-        reactions_kcat_mapping[reaction.id]["reverse_species_list"] = reverse_species_list#Mr.Mao
+        reactions_kcat_mapping[reaction.id][
+            "reverse_kcat_list"
+        ] = reverse_kcat_list  # Mr.Mao
+        reactions_kcat_mapping[reaction.id][
+            "reverse_ori_kcat"
+        ] = ori_reverse_kcat  # Mr.Mao
+        reactions_kcat_mapping[reaction.id][
+            "reverse_species_list"
+        ] = reverse_species_list  # Mr.Mao
         # display the found out kcats for this reaction \o/
-        #_print_assigned_kcats(reaction.id, forward_kcat, reverse_kcat)
+        # _print_assigned_kcats(reaction.id, forward_kcat, reverse_kcat)
 
     # Export the kcat mapping results as JSON :D
-    json_write(basepath+"_reactions_kcat_mapping_combined.json", reactions_kcat_mapping)
+    json_write(
+        basepath + "_reactions_kcat_mapping_combined.json", reactions_kcat_mapping
+    )
 
-def get_protein_mass_mapping(model: cobra.Model, project_folder: str, project_name: str) -> None:
+
+def get_protein_mass_mapping(
+    model: cobra.Model, project_folder: str, project_name: str
+) -> None:
     """Returns a JSON with a mapping of protein IDs as keys, and as values the protein mass in kDa.
 
     The protein masses are calculated using the amino acid sequence from UniProt (retrieved using
@@ -1900,13 +2148,13 @@ def get_protein_mass_mapping(model: cobra.Model, project_folder: str, project_na
     # are searched at once in order to save an amount of UniProt API calls)
     # and retrieve the amino acid sequences and using these sequences, their
     # masses.
-    #print("Starting UniProt ID<->Protein mass search using UniProt API...")
+    # print("Starting UniProt ID<->Protein mass search using UniProt API...")
     uniprot_ids = list(uniprot_id_protein_id_mapping.keys())
     batch_size = 5
     batch_start = 0
     while batch_start < len(uniprot_ids):
         # Create the batch with all UniProt IDs
-        prebatch = uniprot_ids[batch_start:batch_start+batch_size]
+        prebatch = uniprot_ids[batch_start : batch_start + batch_size]
         batch = []
         # Remove all IDs which are present in the cache (i.e.,
         # which were searched for already).
@@ -1917,8 +2165,10 @@ def get_protein_mass_mapping(model: cobra.Model, project_folder: str, project_na
                 batch.append(uniprot_id)
             else:
                 cache_filepath = cache_basepath + uniprot_id
-                uniprot_id_protein_mass_mapping[uniprot_id] = pickle_load(cache_filepath)
-                #print(uniprot_id+":", uniprot_id_protein_mass_mapping[uniprot_id])
+                uniprot_id_protein_mass_mapping[uniprot_id] = pickle_load(
+                    cache_filepath
+                )
+                # print(uniprot_id+":", uniprot_id_protein_mass_mapping[uniprot_id])
 
         # If all IDs could be found in the cache, continue with the next batch.
         if len(batch) == 0:
@@ -1931,7 +2181,7 @@ def get_protein_mass_mapping(model: cobra.Model, project_folder: str, project_na
         query = " OR ".join(batch)
         # uniprot_query_url = f"https://legacy.uniprot.org/uniprot/?query={query}&format=tab&columns=id,sequence"
         uniprot_query_url = f"https://rest.uniprot.org/uniprotkb/search?query=accession:{query}&format=tsv&fields=accession,sequence"
-        #print(f"UniProt batch search for: {query}")
+        # print(f"UniProt batch search for: {query}")
 
         # Call UniProt's API :-)
         uniprot_data = requests.get(uniprot_query_url).text.split("\n")
@@ -1966,17 +2216,21 @@ def get_protein_mass_mapping(model: cobra.Model, project_folder: str, project_na
         try:
             protein_ids = uniprot_id_protein_id_mapping[uniprot_id]
         except Exception:
-            #print(f"No mass found for {uniprot_id}!")
+            # print(f"No mass found for {uniprot_id}!")
             continue
         for protein_id in protein_ids:
-            protein_id_mass_mapping[protein_id] = uniprot_id_protein_mass_mapping[uniprot_id]
+            protein_id_mass_mapping[protein_id] = uniprot_id_protein_mass_mapping[
+                uniprot_id
+            ]
 
     # Write protein mass list JSON :D
-    #print("Protein ID<->Mass mapping done!")
-    json_write(basepath+"_protein_id_mass_mapping.json", protein_id_mass_mapping)
+    # print("Protein ID<->Mass mapping done!")
+    json_write(basepath + "_protein_id_mass_mapping.json", protein_id_mass_mapping)
 
 
-def get_protein_mass_mapping_with_sbml(sbml_path: str, project_folder: str, project_name: str) -> None:
+def get_protein_mass_mapping_with_sbml(
+    sbml_path: str, project_folder: str, project_name: str
+) -> None:
     """This module's get_protein_mass_mapping() with SBML instead of a cobrapy module as argument.
 
     Arguments
@@ -1987,5 +2241,3 @@ def get_protein_mass_mapping_with_sbml(sbml_path: str, project_folder: str, proj
     """
     model: cobra.Model = cobra.io.read_sbml_model(sbml_path)
     get_protein_mass_mapping(model, project_folder, project_name)
-    
-    
