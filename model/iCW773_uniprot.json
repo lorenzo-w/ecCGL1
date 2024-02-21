@@ -9736,7 +9736,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"( cg0480 and cg2521 ) or 0341",
+"gene_reaction_rule":"(cg0480 and cg2521) or 0341",
 "annotation":{
 "ec-code":"6.2.1.3"
 }
@@ -9756,7 +9756,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"( cg0480 and cg2521 ) or 0341",
+"gene_reaction_rule":"(cg0480 and cg2521) or 0341",
 "annotation":{
 "ec-code":"6.2.1.3"
 }
@@ -9776,7 +9776,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"( cg0480 and cg2521 ) or 0341",
+"gene_reaction_rule":"(cg0480 and cg2521) or 0341",
 "annotation":{
 "ec-code":"6.2.1.3"
 }
@@ -9796,7 +9796,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"( cg0480 and cg2521 ) or 0341",
+"gene_reaction_rule":"(cg0480 and cg2521) or 0341",
 "annotation":{
 "ec-code":"6.2.1.3"
 }
@@ -9816,7 +9816,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"( cg0480 and cg2521 ) or 0341",
+"gene_reaction_rule":"(cg0480 and cg2521) or 0341",
 "annotation":{
 "ec-code":"6.2.1.3"
 }
@@ -9836,7 +9836,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"( cg0480 and cg2521 ) or 0341",
+"gene_reaction_rule":"(cg0480 and cg2521) or 0341",
 "annotation":{
 "ec-code":"6.2.1.3"
 }
@@ -9856,7 +9856,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"( cg0480 and cg2521 ) or 0341",
+"gene_reaction_rule":"(cg0480 and cg2521) or 0341",
 "annotation":{
 "ec-code":"6.2.1.3"
 }
@@ -9876,7 +9876,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"( cg0480 and cg2521 ) or 0341",
+"gene_reaction_rule":"(cg0480 and cg2521) or 0341",
 "annotation":{
 "ec-code":"6.2.1.3"
 }
@@ -9896,7 +9896,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"( cg0480 and cg2521 ) or 0341",
+"gene_reaction_rule":"(cg0480 and cg2521) or 0341",
 "annotation":{
 "ec-code":"6.2.1.3"
 }
@@ -9916,7 +9916,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"( cg0480 and cg2521 ) or 0341",
+"gene_reaction_rule":"(cg0480 and cg2521) or 0341",
 "annotation":{
 "ec-code":"6.2.1.3"
 }
@@ -23023,7 +23023,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"( cg1838 and cgtRNA_3529 ) or cgtRNA_3530 or cgtRNA_3532 or cgtRNA_3580"
+"gene_reaction_rule":"(cg1838 and cgtRNA_3529) or cgtRNA_3530 or cgtRNA_3532 or cgtRNA_3580"
 },
 {
 "id":"ARGTRS",
@@ -23038,7 +23038,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"( cg1333 and cgtRNA_3536 ) or cgtRNA_3537 or cgtRNA_3549 or cgtRNA_3552 or cgtRNA_3575"
+"gene_reaction_rule":"(cg1333 and cgtRNA_3536) or cgtRNA_3537 or cgtRNA_3549 or cgtRNA_3552 or cgtRNA_3575"
 },
 {
 "id":"ASNTRS",
@@ -23086,7 +23086,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"cg2924 or ( cg0443 and cgtRNA_3564 )"
+"gene_reaction_rule":"cg2924 or (cg0443 and cgtRNA_3564)"
 },
 {
 "id":"FMETTRS",
@@ -23136,7 +23136,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"( cg0289 and cg1463 and cgtRNA_3554 ) or cgtRNA_3556 or cgtRNA_3557 or cgtRNA_3584",
+"gene_reaction_rule":"(cg0289 and cg1463 and cgtRNA_3554) or cgtRNA_3556 or cgtRNA_3557 or cgtRNA_3584",
 "annotation":{
 "ec-code":"6.1.1.17"
 }
@@ -23154,7 +23154,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"( cg2499 and cgtRNA_3562 ) or cgtRNA_3565 or cgtRNA_3567 or cgtRNA_3574 or cgtRNA_3587"
+"gene_reaction_rule":"(cg2499 and cgtRNA_3562) or cgtRNA_3565 or cgtRNA_3567 or cgtRNA_3574 or cgtRNA_3587"
 },
 {
 "id":"HISTRS",
@@ -23184,7 +23184,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"( cg2359 and cgtRNA_3528 ) or cgtRNA_2531",
+"gene_reaction_rule":"(cg2359 and cgtRNA_3528) or cgtRNA_2531",
 "annotation":{
 "ec-code":"6.1.1.5"
 }
@@ -23202,7 +23202,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"( cg3346 and cgtRNA_3533 ) or cgtRNA_3551 or cgtRNA_3558 or cgtRNA_3560 or cgtRNA_3561 or cgtRNA_3579",
+"gene_reaction_rule":"(cg3346 and cgtRNA_3533) or cgtRNA_3551 or cgtRNA_3558 or cgtRNA_3560 or cgtRNA_3561 or cgtRNA_3579",
 "annotation":{
 "ec-code":"6.1.1.4"
 }
@@ -23220,7 +23220,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"( cg2974 and cgtRNA_3577 ) or cgtRNA_3578 or cgtRNA_3585"
+"gene_reaction_rule":"(cg2974 and cgtRNA_3577) or cgtRNA_3578 or cgtRNA_3585"
 },
 {
 "id":"METTRS",
@@ -23235,7 +23235,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"( cg1017 and cgtRNA_3545 ) or cgtRNA_3547 or cgtRNA_3548 or cgtRNA_3570",
+"gene_reaction_rule":"(cg1017 and cgtRNA_3545) or cgtRNA_3547 or cgtRNA_3548 or cgtRNA_3570",
 "annotation":{
 "ec-code":"6.1.1.10"
 }
@@ -23271,7 +23271,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"( cg2185 and cgtRNA_3540 ) or cgtRNA_3559 or cgtRNA_3573",
+"gene_reaction_rule":"(cg2185 and cgtRNA_3540) or cgtRNA_3559 or cgtRNA_3573",
 "annotation":{
 "ec-code":"6.1.1.15"
 }
@@ -23289,7 +23289,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"( cg3201 and cgtRNA_3534 ) or cgtRNA_3535 or cgtRNA_3538 or cgtRNA_3579",
+"gene_reaction_rule":"(cg3201 and cgtRNA_3534) or cgtRNA_3535 or cgtRNA_3538 or cgtRNA_3579",
 "annotation":{
 "ec-code":"6.1.1.11"
 }
@@ -23325,7 +23325,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"( cg1880 and cgtRNA_3541 ) or cgtRNA_3543 or cgtRNA_3544 or cgtRNA_3586",
+"gene_reaction_rule":"(cg1880 and cgtRNA_3541) or cgtRNA_3543 or cgtRNA_3544 or cgtRNA_3586",
 "annotation":{
 "ec-code":"6.1.1.3"
 }
@@ -23379,7 +23379,7 @@
 },
 "lower_bound":0.0,
 "upper_bound":1000.0,
-"gene_reaction_rule":"( cg2609 and cgtRNA_3563 ) or cgtRNA_3566 or cgtRNA_3568 or cgtRNA_3569",
+"gene_reaction_rule":"(cg2609 and cgtRNA_3563) or cgtRNA_3566 or cgtRNA_3568 or cgtRNA_3569",
 "annotation":{
 "ec-code":"6.1.1.9"
 }
@@ -28084,11 +28084,11 @@
 "name":"0341"
 },
 {
-"id":"Cgl2109",
+"id":"Cgl2471",
 "name":""
 },
 {
-"id":"Cgl2471",
+"id":"Cgl2109",
 "name":""
 },
 {
@@ -28100,15 +28100,11 @@
 "name":""
 },
 {
-"id":"Cgl2325",
-"name":""
-},
-{
 "id":"Cgl1366",
 "name":""
 },
 {
-"id":"Cgl0323",
+"id":"Cgl2325",
 "name":""
 },
 {
@@ -28120,7 +28116,7 @@
 "name":""
 },
 {
-"id":"Cgl0352",
+"id":"Cgl0323",
 "name":""
 },
 {
@@ -28128,11 +28124,15 @@
 "name":""
 },
 {
-"id":"Cgl0397",
+"id":"Cgl0352",
 "name":""
 },
 {
 "id":"Cgl0353",
+"name":""
+},
+{
+"id":"Cgl0397",
 "name":""
 },
 {
@@ -28144,6 +28144,10 @@
 "name":""
 },
 {
+"id":"Cgl0366",
+"name":""
+},
+{
 "id":"Cgl1129",
 "name":""
 },
@@ -28152,19 +28156,15 @@
 "name":""
 },
 {
-"id":"Cgl0366",
-"name":""
-},
-{
 "id":"Cgl0371",
 "name":""
 },
 {
-"id":"Cgl0372",
+"id":"Cgl0370",
 "name":""
 },
 {
-"id":"Cgl0370",
+"id":"Cgl0372",
 "name":""
 },
 {
@@ -28196,11 +28196,11 @@
 "name":""
 },
 {
-"id":"Cgl2688",
+"id":"Cgl0113",
 "name":""
 },
 {
-"id":"Cgl0113",
+"id":"Cgl2688",
 "name":""
 },
 {
@@ -28212,19 +28212,11 @@
 "name":""
 },
 {
-"id":"Cgl2229",
-"name":""
-},
-{
 "id":"Cgl2214",
 "name":""
 },
 {
-"id":"Cgl2729",
-"name":""
-},
-{
-"id":"Cgl0269",
+"id":"Cgl2229",
 "name":""
 },
 {
@@ -28232,11 +28224,15 @@
 "name":""
 },
 {
-"id":"Cgl2734",
+"id":"Cgl2732",
 "name":""
 },
 {
-"id":"Cgl2732",
+"id":"Cgl0269",
+"name":""
+},
+{
+"id":"Cgl2734",
 "name":""
 },
 {
@@ -28244,15 +28240,19 @@
 "name":""
 },
 {
-"id":"Cgl2731",
-"name":""
-},
-{
 "id":"Cgl2733",
 "name":""
 },
 {
+"id":"Cgl2729",
+"name":""
+},
+{
 "id":"Cgl0267",
+"name":""
+},
+{
+"id":"Cgl2731",
 "name":""
 },
 {
@@ -28264,15 +28264,11 @@
 "name":""
 },
 {
-"id":"Cgl0390",
-"name":""
-},
-{
-"id":"Cgl0036",
-"name":""
-},
-{
 "id":"Cgl0389",
+"name":""
+},
+{
+"id":"Cgl0390",
 "name":""
 },
 {
@@ -28284,15 +28280,19 @@
 "name":""
 },
 {
+"id":"Cgl0036",
+"name":""
+},
+{
+"id":"Cgl1141",
+"name":""
+},
+{
 "id":"Cgl2887",
 "name":""
 },
 {
 "id":"Cgl2784",
-"name":""
-},
-{
-"id":"Cgl1141",
 "name":""
 },
 {
@@ -28312,7 +28312,11 @@
 "name":""
 },
 {
-"id":"Cgl2575",
+"id":"Cgl2573",
+"name":""
+},
+{
+"id":"Cgl2572",
 "name":""
 },
 {
@@ -28320,11 +28324,7 @@
 "name":""
 },
 {
-"id":"Cgl2573",
-"name":""
-},
-{
-"id":"Cgl2572",
+"id":"Cgl2575",
 "name":""
 },
 {
@@ -28336,19 +28336,7 @@
 "name":""
 },
 {
-"id":"Cgl2628",
-"name":""
-},
-{
-"id":"Cgl0028",
-"name":""
-},
-{
-"id":"Cgl2629",
-"name":""
-},
-{
-"id":"Cgl0027",
+"id":"Cgl0029",
 "name":""
 },
 {
@@ -28356,11 +28344,19 @@
 "name":""
 },
 {
-"id":"Cgl0029",
+"id":"Cgl0028",
 "name":""
 },
 {
-"id":"Cgl2870",
+"id":"Cgl0027",
+"name":""
+},
+{
+"id":"Cgl2628",
+"name":""
+},
+{
+"id":"Cgl2629",
 "name":""
 },
 {
@@ -28368,11 +28364,15 @@
 "name":""
 },
 {
-"id":"Cgl0839",
+"id":"Cgl2870",
 "name":""
 },
 {
 "id":"Cgl0652",
+"name":""
+},
+{
+"id":"Cgl0839",
 "name":""
 },
 {
@@ -28400,27 +28400,7 @@
 "name":""
 },
 {
-"id":"Cgl1207",
-"name":""
-},
-{
-"id":"Cgl1208",
-"name":""
-},
-{
-"id":"Cgl1210",
-"name":""
-},
-{
-"id":"Cgl1211",
-"name":""
-},
-{
 "id":"Cgl1213",
-"name":""
-},
-{
-"id":"Cgl1209",
 "name":""
 },
 {
@@ -28432,6 +28412,34 @@
 "name":""
 },
 {
+"id":"Cgl1211",
+"name":""
+},
+{
+"id":"Cgl1207",
+"name":""
+},
+{
+"id":"Cgl1210",
+"name":""
+},
+{
+"id":"Cgl1209",
+"name":""
+},
+{
+"id":"Cgl1208",
+"name":""
+},
+{
+"id":"Cgl2194",
+"name":""
+},
+{
+"id":"Cgl2523",
+"name":""
+},
+{
 "id":"Cgl2192",
 "name":""
 },
@@ -28440,15 +28448,7 @@
 "name":""
 },
 {
-"id":"Cgl2523",
-"name":""
-},
-{
-"id":"Cgl2194",
-"name":""
-},
-{
-"id":"Cgl2679",
+"id":"Cgl0603",
 "name":""
 },
 {
@@ -28456,11 +28456,7 @@
 "name":""
 },
 {
-"id":"Cgl0603",
-"name":""
-},
-{
-"id":"Cgl1180",
+"id":"Cgl2679",
 "name":""
 },
 {
@@ -28468,11 +28464,15 @@
 "name":""
 },
 {
-"id":"Cgl1106",
+"id":"Cgl1180",
 "name":""
 },
 {
 "id":"Cgl1108",
+"name":""
+},
+{
+"id":"Cgl1106",
 "name":""
 },
 {
@@ -28500,10 +28500,6 @@
 "name":""
 },
 {
-"id":"Cgl0032",
-"name":""
-},
-{
 "id":"Cgl0031",
 "name":""
 },
@@ -28512,7 +28508,7 @@
 "name":""
 },
 {
-"id":"Cgl1951",
+"id":"Cgl0032",
 "name":""
 },
 {
@@ -28524,15 +28520,15 @@
 "name":""
 },
 {
+"id":"Cgl1951",
+"name":""
+},
+{
 "id":"Cgl1952",
 "name":""
 },
 {
 "id":"Cgl1993",
-"name":""
-},
-{
-"id":"Cgl2322",
 "name":""
 },
 {
@@ -28544,7 +28540,15 @@
 "name":""
 },
 {
+"id":"Cgl2322",
+"name":""
+},
+{
 "id":"Cgl2310",
+"name":""
+},
+{
+"id":"Cgl2461",
 "name":""
 },
 {
@@ -28556,15 +28560,11 @@
 "name":""
 },
 {
-"id":"Cgl2461",
-"name":""
-},
-{
 "id":"Cgl1360",
 "name":""
 },
 {
-"id":"Cgl0637",
+"id":"Cgl0635",
 "name":""
 },
 {
@@ -28572,7 +28572,7 @@
 "name":""
 },
 {
-"id":"Cgl0635",
+"id":"Cgl0637",
 "name":""
 },
 {
@@ -28584,15 +28584,15 @@
 "name":""
 },
 {
-"id":"Cgl1222",
-"name":""
-},
-{
 "id":"Cgl1458",
 "name":""
 },
 {
-"id":"Cgl1459",
+"id":"Cgl1222",
+"name":""
+},
+{
+"id":"Cgl1221",
 "name":""
 },
 {
@@ -28600,11 +28600,11 @@
 "name":""
 },
 {
-"id":"Cgl1460",
+"id":"Cgl1459",
 "name":""
 },
 {
-"id":"Cgl1221",
+"id":"Cgl1460",
 "name":""
 },
 {
@@ -28620,15 +28620,15 @@
 "name":""
 },
 {
-"id":"Cgl1254",
-"name":""
-},
-{
 "id":"Cgl1253",
 "name":""
 },
 {
-"id":"Cgl0428",
+"id":"Cgl1254",
+"name":""
+},
+{
+"id":"Cgl0427",
 "name":""
 },
 {
@@ -28636,7 +28636,7 @@
 "name":""
 },
 {
-"id":"Cgl0427",
+"id":"Cgl0428",
 "name":""
 },
 {
@@ -28652,7 +28652,7 @@
 "name":""
 },
 {
-"id":"Cgl0089",
+"id":"Cgl0087",
 "name":""
 },
 {
@@ -28664,15 +28664,11 @@
 "name":""
 },
 {
-"id":"Cgl0087",
+"id":"Cgl0089",
 "name":""
 },
 {
 "id":"Cgl1635",
-"name":""
-},
-{
-"id":"Cgl1247",
 "name":""
 },
 {
@@ -28684,6 +28680,10 @@
 "name":""
 },
 {
+"id":"Cgl1247",
+"name":""
+},
+{
 "id":"Cgl1390",
 "name":""
 },
@@ -28692,15 +28692,15 @@
 "name":""
 },
 {
-"id":"Cgl1132",
+"id":"Cgl1629",
 "name":""
 },
 {
-"id":"Cgl1629",
+"id":"Cgl1132",
 "name":""
 }
 ],
-"id":null,
+"id":"",
 "compartments":{
 "c":"",
 "e":""

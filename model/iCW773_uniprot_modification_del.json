@@ -23136,7 +23136,7 @@
             },
             "lower_bound": 0.0,
             "upper_bound": 1000.0,
-            "gene_reaction_rule": "Cgl0236 and Cgl1293 or cgtRNA_3556 or cgtRNA_3557 or cgtRNA_3584",
+            "gene_reaction_rule": "(Cgl0236 and Cgl1293) or cgtRNA_3556 or cgtRNA_3557 or cgtRNA_3584",
             "annotation": {
                 "ec-code": "6.1.1.17"
             }
@@ -29486,13 +29486,6 @@
             }
         },
         {
-            "id": "Cgl2322",
-            "name": "G_Cgl2322",
-            "annotation": {
-                "uniprot": "Q8NN84"
-            }
-        },
-        {
             "id": "Cgl2321",
             "name": "G_Cgl2321",
             "annotation": {
@@ -29504,6 +29497,13 @@
             "name": "G_Cgl2320",
             "annotation": {
                 "uniprot": "Q8NN86"
+            }
+        },
+        {
+            "id": "Cgl2322",
+            "name": "G_Cgl2322",
+            "annotation": {
+                "uniprot": "Q8NN84"
             }
         },
         {
@@ -29563,7 +29563,7 @@
             }
         }
     ],
-    "id": null,
+    "id": "",
     "compartments": {
         "c": "",
         "e": ""
