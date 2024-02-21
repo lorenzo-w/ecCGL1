@@ -1,0 +1,29 @@
+[project]
+name = "ecCGL1"
+version = "0.1.0"
+description = "Fork of model code from https://doi.org/10.3390/biom12101499"
+authors = [
+    {name = "Lorenzo Wormer", email = "l.wormer@mailbox.org"},
+]
+dependencies = [
+    "cobra>=0.29.0",
+    "plotly>=5.19.0",
+    "nbformat>=5.9.2",
+    "requests>=2.31.0",
+    "Bio>=1.6.2",
+    "scipy>=1.12.0",
+    "ipykernel>=6.29.2",
+]
+requires-python = ">=3.11"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pdm]
+distribution = true
+
+[tool.ruff]
+ignore = ["F405"]
